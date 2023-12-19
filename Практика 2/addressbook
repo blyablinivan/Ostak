@@ -1,0 +1,63 @@
+#!/bin/bash
+
+ADDRESSBOOK=addressbook.txt
+
+function add_entry() {
+  echo "${1} ${2} $3" >> $ADDRESSBOOK
+
+}
+
+function list_entries() {
+
+  if [ ! -s $ADDRESSBOOK ]; then
+    echo "addressbook is empty"
+  else
+    cat $ADDRESSBOOK
+  fi
+
+}
+
+function remove_entry() {
+
+  name=$1
+
+  sed -i "/$name/d" $ADDRESSBOOK
+
+  if [ ! -s $ADDRESSBOOK ]; then
+    echo "entry with name $name not found"
+  fi
+
+}
+
+function clear_book() {
+  > $ADDRESSBOOK
+}
+
+function lookup_entry() {
+
+  name="${1} ${2}"
+
+  grep "^$name " $ADDRESSBOOK
+
+}
+
+case $1 in
+  "new")
+    add_entry $2 $3
+    ;;
+  "list")
+    list_entries 
+    ;;
+  "remove")
+    remove_entry $2
+    ;; 
+  "clear")
+    clear_book
+    ;;
+  "lookup")
+    lookup_entry $2
+    ;;
+  *)
+    echo "Invalid command"
+    ;;
+esac
